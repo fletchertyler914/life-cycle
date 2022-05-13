@@ -1,0 +1,38 @@
+{
+  "scripts": {
+    "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
+    "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
+    "setup-assets": "mkdir -p assets",
+    "setup-snapshots": "mkdir -p snapshots && mkdir -p snapshots/mints",
+    "snapshot-mints:devnet": "metaboss -r https://psytrbhymqlkfrhudd.dev.genesysgo.net:8899 snapshot mints --candy-machine-id BewKAZmJFzLNLA8tnLpH6tAewHLbjhJqYdCXaSZcAqbo --v2 --output ./snapshots/mints",
+    "snapshot-mints:mainnet": "metaboss -r https://ssc-dao.genesysgo.net snapshot mints --candy-machine-id <MAINNET_CM_ID> --v2 --output ./CMv2/snapshots/mints",
+    "sign-all:devnet": "metaboss -r https://psytrbhymqlkfrhudd.dev.genesysgo.net:8899 sign all -k ~/.config/solana/id.json --candy-machine-id BewKAZmJFzLNLA8tnLpH6tAewHLbjhJqYdCXaSZcAqbo --v2",
+    "sign-all:mainnet": "metaboss -r https://ssc-dao.genesysgo.net sign all -k ~/.config/solana/mainnet.json --candy-machine-id <MAINNET_CM_ID> --v2",
+    "update-auth:devnet": "metaboss -r https://psytrbhymqlkfrhudd.dev.genesysgo.net:8899 set update-authority-all -k ~/.config/solana/id.json --mint-accounts-file ./snapshots/mints/BewKAZmJFzLNLA8tnLpH6tAewHLbjhJqYdCXaSZcAqbo_mint_accounts.json --new-update-authority E4eeQrQ6fMp63Fxfxb9enrE22n5bCYQ9CWs6exA8VHiE",
+    "update-auth:mainnet": "metaboss -r https://ssc-dao.genesysgo.net set update-authority-all -k ~/.config/solana/mainnet.json --mint-accounts-file ./snapshots/mints/<MAINNET_CM_ID>_mint_accounts.json --new-update-authority <NEW_AUTH_KEY>",
+    "drain_cm:devnet": "sugar withdraw --candy-machine <DEVNET_CM_ID>",
+    "drain_cm:mainnet": "sugar withdraw --candy-machine <MAINNET_CM_ID>",
+    "############## BEGIN RUN STEPS ####################################": "",
+    "init_project": "npm run setup-snapshots && npm run setup-assets",
+    "create_candy_machine": "sugar launch",
+    "start_lifecycle:devnet": "yarn run sign-all:devnet && yarn run snapshot-mints:devnet && yarn run update-auth:devnet",
+    "start_lifecycle:mainnet": "yarn run sign-all:mainnet && yarn run snapshot-mints:mainnet && yarn run update-auth:mainnet",
+    "############## END RUN STEPS ####################################": ""
+  },
+  "dependencies": {
+    "@metaplex-foundation/js-next": "^0.9.0",
+    "@project-serum/anchor": "^0.24.2",
+    "@snowflake-so/snowflake-sdk": "^1.0.12",
+    "@solana/web3.js": "^1.41.9"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.0",
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^9.0.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.3",
+    "prettier": "^2.6.2",
+    "ts-mocha": "^8.0.0",
+    "typescript": "^4.3.5"
+  }
+}
